@@ -1,7 +1,7 @@
 # 75. Create a Python file models.py. Import necessary classes from sqlalchemy.
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean, Time, Float, DateTime
 from sqlalchemy.orm import declarative_base, relationship
 
 # 76. Define an engine connecting to your college_db PostgreSQL database.
@@ -31,6 +31,7 @@ class Student(Base):
     email = Column(String(100), nullable=False, unique=True)
     admn_year = Column(Integer, nullable=False)
     department_id = Column(Integer, ForeignKey('departments.id'), nullable=False)
+    is_active = Column(Boolean, default=True, nullable=True)
     
     # 78. Define relationships: Student has a many-to-one relationship to Department. Enrollment has many-to-one relationships to both Student and Course.
     department = relationship("Department", back_populates="students")
@@ -70,6 +71,17 @@ class Professor(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     specialization = Column(String(100), nullable=True)
+
+class CourseSchedule(Base):
+    __tablename__ = 'course_schedules'
+    
+    schedule_id = Column(Integer, primary_key=True)
+    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
+    day_of_week = Column(String(15), nullable=False)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
+    
+    course = relationship("Course")
 
 # 79. Use Base.metadata.create_all(engine) to auto-create tables in a fresh database (college_db_orm), and confirm they appear in your SQL client.
 if __name__ == "__main__":
