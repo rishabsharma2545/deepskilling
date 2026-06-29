@@ -16,11 +16,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from courses.views import hello_view
 
 # 9. In `urls.py`, add a URL pattern that maps /api/hello/ to hello_view.
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/hello/', hello_view),
+    
+    # 29. Include courses/urls.py in the main urls.py. 
+    path('api/', include('courses.urls'))
 ]
