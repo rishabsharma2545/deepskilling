@@ -1,12 +1,21 @@
+# 47. In app.py, initialise Flask-SQLAlchemy: db = SQLAlchemy(). In create_app(), call db.init_app(app).
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask import Flask, jsonify
 from config import Config
-from courses import courses_bp
+
+db = SQLAlchemy()
+migrator = Migrate()
 
 # 37. In app.py, create the Flask app using the application factory pattern.
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///coursemanager.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    from courses import courses_bp, models
     # 40. Register the blueprint in create_app() with app.register_blueprint(courses_bp).
     app.register_blueprint(courses_bp)
     
@@ -27,6 +36,10 @@ def create_app(config_class=Config):
             'status': 'error',
             'message': 'An unexpected internal server error occurred.'
         }), 500
+    
+    # Bind extensions to the app instance
+    db.init_app(app)
+    migrator.init_app(app, db)
     
     return app
 
