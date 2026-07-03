@@ -1,8 +1,9 @@
 # 58. Create schemas.py. Define Pydantic BaseModel classes: CourseCreate (name, code, credits, department_id), 
 # CourseUpdate (all fields optional using Optional[]), CourseResponse (all fields plus id — this is the response schema).
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List
+from datetime import datetime
 
 class CourseCreate(BaseModel):
     name: str
@@ -35,3 +36,36 @@ class DepartmentResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class StudentCreate(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+
+class StudentUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+class StudentResponse(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: str
+    class Config:
+        from_attributes = True
+
+class EnrollmentCreate(BaseModel):
+    student_id: int
+    course_id: int
+
+class EnrollmentUpdate(BaseModel):
+    student_id: Optional[int] = None
+    course_id: Optional[int] = None
+
+class EnrollmentResponse(BaseModel):
+    id: int
+    student_id: int
+    course_id: int
+    enrollment_date: datetime
+    class Config:
+        from_attributes = True
