@@ -8,12 +8,42 @@ from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import engine, Base, get_db
-from models import Course, Student, Enrollment
+from models import Course, Student, Enrollment, User
+from security import get_password_hash, verify_password, create_access_token
 from schemas import (
     CourseCreate, CourseUpdate, CourseResponse,
     StudentCreate, StudentUpdate, StudentResponse,
-    EnrollmentCreate, EnrollmentUpdate, EnrollmentResponse
+    EnrollmentCreate, EnrollmentUpdate, EnrollmentResponse,
+    UserRegister, UserResponse, UserLogin, Token
 )
+
+from fastapi.middleware.cors import CORSMiddleware
+
+# 92. Create a get_current_user(token: str = Depends(oauth2_scheme)) dependency that decodes and validates the JWT token, returning the current user object. 
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from security import SECRET_KEY, ALGORITHM
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl = "/api/v1/auth/login/")
+
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+
+    except JWTError:
+        raise credentials_exception
+
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
+    if user is None:
+        raise credentials_exception
+
+    return user
 
 # 73. Task function to simulate asynchronous background work
 async def send_enrollment_email(student_email: str, course_code: str):
@@ -32,6 +62,7 @@ async def lifespan(app: FastAPI):
 
 # 75. Customize structural OpenAPI metadata directly inside the constructor instance
 app = FastAPI(
+    lifespan = lifespan,
     title="University Course Management API",
     description=(
         "An advanced relational REST API engine designed to handle university course catalogs, "
@@ -43,6 +74,13 @@ app = FastAPI(
         "url": "https://example.com/support",
         "email": "it-support@university.edu",
     }
+)
+
+# 94. Configure CORS in your app to allow requests from http://localhost:3000 (your frontend dev server). 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = ["http://localhost:3000"], allow_credentials = True,
+    allow_methods = ["*"], allow_headers = ["*"],
 )
 
 @app.exception_handler(HTTPException)
@@ -74,7 +112,7 @@ def home():
     summary="Create a new course entry",
     response_description="The course record was successfully validated and committed to the storage layer."
 )
-async def create_course(course: CourseCreate, response: Response, db: AsyncSession = Depends(get_db)):
+async def create_course(course: CourseCreate, response: Response, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     db_course = Course(**course.model_dump())
     db.add(db_course)
     await db.commit()
@@ -171,7 +209,7 @@ async def patch_course(course_id: int, course_data: CourseUpdate, db: AsyncSessi
     return db_course
 
 @app.delete('/api/v1/courses/{course_id}', status_code=status.HTTP_204_NO_CONTENT, tags=['Courses'])
-async def delete_course(course_id: int, db: AsyncSession = Depends(get_db)):
+async def delete_course(course_id: int, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Course).where(Course.id == course_id))
     db_course = result.scalar_one_or_none()
     if not db_course:
@@ -316,3 +354,39 @@ async def delete_enrollment(enrollment_id: int, db: AsyncSession = Depends(get_d
     await db.delete(db_enrollment)
     await db.commit()
     return None
+
+# 88. Create a POST /api/v1/auth/register/ endpoint that: validates the email format, checks the email is not already registered (return 409 Conflict if so), 
+# hashes the password using get_password_hash, and saves the user.
+@app.post("/api/v1/auth/register/", response_model = UserResponse, status_code = status.HTTP_201_CREATED, tags = ["Authentication"])
+async def register_user(user: UserRegister, response: Response, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).where(User.email == user.email))
+    existing_user = result.scalar_one_or_none()
+
+    if existing_user:
+        raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = "Email already registered")
+    
+    secured_password = get_password_hash(user.password)
+
+    db_user = User(email = user.email, hashed_password = secured_password, is_active = True)
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+
+    response.headers["Location"] = f"/api/v1/auth/users/{db_user.id}"
+
+    return db_user
+
+# LOGIN ENDPOINT
+# 91. Create a POST /api/v1/auth/login/ endpoint that: accepts email and password, verifies credentials using verify_password
+@app.post("/api/v1/auth/login/", response_model=Token, tags=["Authentication"])
+async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
+
+    result = await db.execute(select(User).where(User.email == user.email))
+    db_user = result.scalar_one_or_none()
+
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+
+    # Create JWT
+    access_token = create_access_token(data={"sub": db_user.email})
+    return {"access_token": access_token, "token_type": "bearer"}

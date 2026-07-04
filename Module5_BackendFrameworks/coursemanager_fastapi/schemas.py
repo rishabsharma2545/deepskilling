@@ -69,3 +69,24 @@ class EnrollmentResponse(BaseModel):
     enrollment_date: datetime
     class Config:
         from_attributes = True
+
+# User schemas
+class UserRegister(BaseModel):
+    email: EmailStr
+    password: str
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    is_active: bool
+
+    class Config:
+        from_attributes = True
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

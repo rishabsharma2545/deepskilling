@@ -37,3 +37,12 @@ class Enrollment(Base):
 
     student = relationship("Student", back_populates="enrollments")
     course = relationship("Course", back_populates="enrollments")
+
+# 86. Create a User model with fields: id, email (unique), hashed_password, is_active.
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key = True, index = True)
+    email: Mapped[str] = mapped_column(String(120), unique = True, nullable = False)
+    hashed_password: Mapped[str] = mapped_column(String, nullable = False)
+    is_active: Mapped[bool] = mapped_column(default = True)
