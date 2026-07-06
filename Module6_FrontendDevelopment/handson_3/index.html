@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | Course Management</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <!-- Header Content -->
+    <header>
+
+        <h2>Student Portal</h2>
+
+        <!-- 25. replace a hamburger placeholder text with the actual nav links. -->
+        <div class="menu-toggle">≡</div>
+
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Grades</a></li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section id="hero">
+            
+            <h1>Welcome to the Student Portal</h1>
+
+            <p>
+                Explore courses, monitor your academic progress,
+                and manage your learning journey all in one place.
+            </p>
+
+            <button>Explore Courses</button>
+
+        </section>
+
+        <!-- 18. Add a student stats bar below the hero with three stat items (e.g., Courses Enrolled: 3, GPA: 3.8, Semester: 6). 
+        Lay them out using Flexbox with equal spacing. -->
+        <section class="stats-bar">
+
+            <div class="stat-item">
+                <h3>3</h3>
+                <p>Courses Enrolled</p>
+            </div>
+
+            <div class="stat-item">
+                <h3>3.8</h3>
+                <p>GPA</p>
+            </div>
+
+            <div class="stat-item">
+                <h3>6</h3>
+                <p>Semester</p>
+            </div>
+
+        </section>
+
+
+        <!-- 40. Add a text <input id='search-courses' placeholder='Search courses...'> above the course grid. -->
+        <!-- 42. Add a 'Sort by Credits' <button>. On click, sort the courses array by credits descending and re-render the grid. -->
+        <section id="controls">
+
+            <input type="text" id="search-courses" placeholder="Search courses...">
+
+            <button id="sort-btn">Sort by Credits</button>
+
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses">
+            
+            <!-- 35. In index.html, ensure the course grid <div class='course-grid'> exists 
+            but is empty (remove hardcoded course articles). -->
+            <h2>Available Courses</h2>
+
+            <div class="course-grid"></div>
+
+            <p id="total-credits"></p>
+
+            <div id="selected-course"></div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Student Portal. All Rights Reserved.</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
