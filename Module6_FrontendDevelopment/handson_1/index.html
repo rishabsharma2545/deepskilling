@@ -1,0 +1,100 @@
+<!-- 1. Create index.html with the proper HTML5 doctype, <html lang='en'>, 
+<head> with charset UTF-8, viewport meta tag, and a descriptive <title>. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal | Course Management</title>
+
+    <!-- 7. Link styles.css to index.html using a <link> tag inside <head>. -->
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+    <!-- 2. Inside <body>, create the following semantic sections: <header> (site name + navigation),
+    <main> with two child sections: <section id='hero'> and <section id='courses'>, and <footer>. -->
+    
+    <!-- Header Content -->
+    <header>
+
+        <h2>Student Portal</h2>
+
+        <!-- 3. Inside <header>, add a <nav> with an unordered list of links: Home, Courses, Profile, Grades. -->
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Grades</a></li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <!-- Main Content -->
+    <main>
+
+        <!-- Hero Section -->
+        <section id="hero">
+            <!-- 4. Inside the hero section, add an <h1> with 'Welcome to the Student Portal', 
+            a short <p> description, and a <button>Explore Courses</button>. -->
+
+            <h1>Welcome to the Student Portal</h1>
+
+            <p>
+                Explore courses, monitor your academic progress,
+                and manage your learning journey all in one place.
+            </p>
+
+            <button>Explore Courses</button>
+
+        </section>
+
+        <!-- Courses Section -->
+        <section id="courses">
+            <!-- 5. Inside the courses section, add an <h2>, and three <article> elements 
+            each containing an <h3> (course name), <p> (description), and a <span> showing credits. -->
+
+            <h2>Available Courses</h2>
+
+            <article class="course-card">
+                <h3>Python Programming</h3>
+                <p>
+                    Learn Python fundamentals including functions,
+                    object-oriented programming, and file handling.
+                </p>
+                <span>Credits: 4</span>
+            </article>
+
+            <article class="course-card">
+                <h3>Web Development</h3>
+                <p>
+                    Build responsive websites using HTML5, CSS3,
+                    and modern JavaScript.
+                </p>
+                <span>Credits: 3</span>
+            </article>
+
+            <article class="course-card">
+                <h3>Database Systems</h3>
+                <p>
+                    Understand relational databases, SQL,
+                    normalization, and database design.
+                </p>
+                <span>Credits: 4</span>
+            </article>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Student Portal. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
