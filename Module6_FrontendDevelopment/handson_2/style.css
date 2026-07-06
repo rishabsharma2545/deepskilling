@@ -1,0 +1,196 @@
+/* ==========================
+   CSS Reset
+========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 24. Rewrite your existing CSS to be mobile-first: start with a single-column layout as the default 
+(no media queries), then use min-width media queries to enhance larger screens. */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 15. Apply display: flex on the header. Use align-items: center and justify-content: space-between. */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+    background: #0d6efd;
+    color: white;
+}
+
+/* 27. Use viewport units: set the site title font-size to clamp(1.5rem, 3vw, 2.5rem) for fluid typography. */
+.site-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.menu-toggle {
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+nav {
+    display: none;
+}
+
+/* 16. Style the <nav> as a flex container with gap between items. Ensure links are vertically centred. */
+nav ul {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: yellow;
+}
+
+
+/* 17. Create a hero section using Flexbox: stack the heading, paragraph, 
+and button vertically with align-items: center and a column flex-direction. */
+#hero {
+    /* 27. Use viewport units: set the hero section min-height: 40vh */
+    min-height: 40vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    gap: 20px;
+}
+
+#hero button {
+    padding: 12px 24px;
+    border: 2px solid #0d6efd;
+    background: #0d6efd;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+#hero button:hover {
+    background: white;
+    color: #0d6efd;
+}
+
+/* ==========================
+   Student Stats
+========================== */
+
+.stats-bar {
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    padding: 20px;
+    background: white;
+    margin: 20px;
+}
+
+.stat-item h3 {
+    color: #0d6efd;
+}
+
+/* ==========================
+   Courses
+========================== */
+
+#courses {
+    padding: 20px;
+}
+
+#courses h2 {
+    margin-bottom: 20px;
+}
+
+
+/* 20. Apply display: grid on .course-grid with grid-template-columns: repeat(3, 1fr) and a gap. */
+.course-grid {
+    display: grid;
+    gap: 20px;
+
+    /* 23. Use grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) — 
+    observe how the grid adapts as you resize the browser window. */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* 21. Give each .course-card a minimum height and make it stretch to fill its grid cell using align-self: stretch. */
+.course-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,.1);
+    min-height: 220px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.course-card span {
+    color: #0d6efd;
+    font-weight: bold;
+}
+
+/* ==========================
+   Footer
+========================== */
+
+footer {
+    text-align: center;
+    background: #0d6efd;
+    color: white;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+
+/* 25. Add a media query at min-width: 768px: change the course grid to 2 columns and show the full navbar  */
+@media (min-width:768px) {
+
+    .menu-toggle {
+        display: none;
+    }
+
+    nav {
+        display: block;
+    }
+
+    .course-grid {
+
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+
+/* 26. Add a media query at min-width: 1024px: change the course grid to 3 columns and increase hero section padding. */
+@media (min-width:1024px) {
+
+    .course-grid {
+
+        grid-template-columns: repeat(3,1fr);
+    }
+
+    #hero {
+
+        padding: 100px 20px;
+    }
+}
