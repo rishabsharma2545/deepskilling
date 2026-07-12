@@ -1,0 +1,52 @@
+.course-card{
+    width: 300px;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    background-color: white;
+}
+
+.course-card h3{
+    color: #0d6efd;
+    margin-bottom: 15px;
+}
+
+.course-card p{
+    margin: 8px 0;
+}
+
+.error{
+    color: red;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.student-profile{
+    width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+
+}
+
+.student-profile form div{
+    margin-bottom: 15px;
+}
+
+.student-profile label{
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.student-profile input{
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
