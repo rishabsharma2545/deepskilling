@@ -1,23 +1,46 @@
 import { useState, useEffect } from "react";
 
+import { Routes, Route, useNavigate } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import CoursesPage from "./pages/CoursesPage";
+import ProfilePage from "./pages/ProfilePage";
+import CourseDetailPage from "./pages/CourseDetailPage";
+
 import { courseData } from "./data";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CourseCard from "./components/CourseCard";
 import StudentProfile from "./components/StudentProfile";
 
+import { useContext } from "react";
+import { EnrollmentContext } from "./context/EnrollmentContext";
+
+const { enrollCourse } = useContext(EnrollmentContext);
+
+import { useDispatch } from "react-redux";
+import { enroll } from "./store/enrollmentSlice";
+
+const dispatch = useDispatch();
+
 // 69. Pass the handler as a prop: onEnroll={handleEnroll}.
 function handleEnroll(course) {
-    const alreadyEnrolled = enrolledCourses.some(
-        enrolledCourse => enrolledCourse.id === course.id
-    );
+    // const alreadyEnrolled = enrolledCourses.some(
+    //     enrolledCourse => enrolledCourse.id === course.id
+    // );
 
-    if (!alreadyEnrolled) {
-        setEnrolledCourses([
-            ...enrolledCourses,
-            course
-        ]);
-    }
+    // if (!alreadyEnrolled) {
+    //     setEnrolledCourses([
+    //         ...enrolledCourses,
+    //         course
+    //     ]);
+    // }
+
+    // enrollCourse(course);
+
+    dispatch(enroll(course));
+
+    // 80. After clicking Enroll on a course, navigate the user to /profile automatically
+    navigate("/profile");
 }
 
 // 71. In App.jsx, add a useEffect that fetches courses from JSONPlaceholder /posts.
@@ -84,6 +107,10 @@ function App() {
     // 73. Add an error state. Catch fetch errors and display an error message if the request fails.
     const [error, setError] = useState(null);
 
+    // 80. Add a useNavigate() hook:
+    const navigate = useNavigate();
+
+
     return (
         // 64. Import and render Header and Footer inside App.jsx. Pass the site name as a prop to Header: 
         // <Header siteName='Student Portal' />. Display it inside the component using {props.siteName}.
@@ -93,32 +120,27 @@ function App() {
                 enrolledCount={enrolledCourses.length}    
             />
 
+            {/* 77. Define routes in App.jsx using <Routes> and <Route>: 
+            / → HomePage, /courses → CoursesPage, /profile → ProfilePage, /courses/:courseId → CourseDetailPage. */}
             <main>
-
-                <StudentProfile />
-
-                <h2>Welcome to React!</h2>
-
-                <input
-                    type="text"
-                    placeholder="Search courses..."
-                    value={searchTerm}
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                />
-                
-                {/* 67. Map over the courses state to render a CourseCard for each course: */}
-                {loading ? (<p>Loading...</p>) : 
-                    error ? (<p className="error">{error}</p>) : (
-                        filteredCourses.map(course => (
-                            <CourseCard
-                                key={course.id}
-                                {...course}
-                                onEnroll={handleEnroll}
-                            />
-                        ))
-                    )
-                }
-
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<HomePage />}
+                    />
+                    <Route
+                        path="/courses"
+                        element={<CoursesPage />}
+                    />
+                    <Route
+                        path="/profile"
+                        element={<ProfilePage />}
+                    />
+                    <Route
+                        path="/courses/:courseId"
+                        element={<CourseDetailPage />}
+                    />
+                </Routes>
             </main>
 
             <Footer />
